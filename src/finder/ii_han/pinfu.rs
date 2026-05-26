@@ -2,13 +2,13 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::{Tile, TileType};
-use crate::finder::finder_base::YakuBase;
+use crate::finder::finder_base::{YakuBase, YakuEntry};
 use crate::finder::utils::is_same_wind;
 
 pub struct Pinfu;
 
 impl YakuBase for Pinfu {
-    fn validate(field: &Field, hand: &WinningHand, _: &Status) -> Option<(String, u8)> {
+    fn validate(field: &Field, hand: &WinningHand, _: &Status) -> Option<YakuEntry> {
         for mentsu in hand.hand {
             match mentsu {
                 Mentsu::Shuntsu(_, open) => {
@@ -28,7 +28,7 @@ impl YakuBase for Pinfu {
         if !Self::is_riyanmen(&hand) {
             return None;
         }
-        Some(("平和".to_string(), 1))
+        Some(YakuEntry::new("平和", 1))
     }
 }
 
@@ -84,7 +84,7 @@ mod valid {
     use crate::constants::field::{Field, Wind};
     use crate::constants::hand::{Mentsu, WinningHand};
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::YakuBase;
+    use crate::finder::finder_base::{YakuBase, YakuEntry};
     use crate::finder::ii_han::pinfu::Pinfu;
     use crate::finder::test_utils::{
         random_field, random_janto, random_shuntu, random_shuntu_number, random_status, random_tile,
@@ -109,7 +109,7 @@ mod valid {
         let status = random_status();
         assert_eq!(
             Pinfu::validate(&field, &winning_hand, &status),
-            Some(("平和".to_string(), 1)),
+            Some(YakuEntry::new("平和", 1)),
             "{:?}",
             hand
         );
@@ -161,7 +161,7 @@ mod valid {
         let status = random_status();
         assert_eq!(
             Pinfu::validate(&field, &winning_hand, &status),
-            Some(("平和".to_string(), 1)),
+            Some(YakuEntry::new("平和", 1)),
             "{:?}",
             hand
         );
@@ -194,7 +194,7 @@ mod valid {
         let status = random_status();
         assert_eq!(
             Pinfu::validate(&field, &winning_hand, &status),
-            Some(("平和".to_string(), 1)),
+            Some(YakuEntry::new("平和", 1)),
             "{:?}",
             hand
         );

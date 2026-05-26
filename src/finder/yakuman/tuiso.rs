@@ -2,12 +2,12 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::YakuBase;
+use crate::finder::finder_base::{YakuBase, YakuEntry};
 
 pub struct Tuiso;
 
 impl YakuBase for Tuiso {
-    fn validate(_: &Field, hand: &WinningHand, _: &Status) -> Option<(String, u8)> {
+    fn validate(_: &Field, hand: &WinningHand, _: &Status) -> Option<YakuEntry> {
         for mentsu in hand.hand {
             match mentsu {
                 Mentsu::Koutsu(tile, _)
@@ -21,7 +21,7 @@ impl YakuBase for Tuiso {
             }
         }
 
-        Some(("字一色".to_string(), 1))
+        Some(YakuEntry::new("字一色", 1))
     }
 }
 
@@ -29,7 +29,7 @@ impl YakuBase for Tuiso {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::YakuBase;
+    use crate::finder::finder_base::{YakuBase, YakuEntry};
     use crate::finder::test_utils::{from_hand, random_field, random_status};
     use crate::finder::yakuman::tuiso::Tuiso;
     use rand::random;
@@ -73,7 +73,7 @@ mod valid {
 
         assert_eq!(
             Tuiso::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(("字一色".to_string(), 1)),
+            Some(YakuEntry::new("字一色", 1)),
             "{:?}",
             hand
         );

@@ -1,3 +1,5 @@
+use crate::finder::finder_base::YakuEntry;
+
 /// represents which yaku was found
 #[derive(Debug)]
 pub enum FoundResult {
@@ -7,29 +9,31 @@ pub enum FoundResult {
 
 #[derive(Debug)]
 pub struct FoundYaku {
-    pub dora: Vec<(String, u8)>,
-    pub ii_han: Vec<(String, u8)>,
-    pub ryan_han: Vec<(String, u8)>,
-    pub san_han: Vec<(String, u8)>,
-    pub roku_han: Vec<(String, u8)>,
+    pub dora: Vec<YakuEntry>,
+    pub ii_han: Vec<YakuEntry>,
+    pub ryan_han: Vec<YakuEntry>,
+    pub san_han: Vec<YakuEntry>,
+    pub roku_han: Vec<YakuEntry>,
 }
 
 #[derive(Debug)]
 pub struct FoundYakuman {
-    pub yakuman: Vec<(String, u8)>,
+    pub yakuman: Vec<YakuEntry>,
 }
 
 impl FoundResult {
     pub fn count_yaku(&self) -> u8 {
         match self {
             FoundResult::FoundYaku(yaku) => {
-                yaku.dora.iter().map(|(_, value)| value).sum::<u8>()
-                    + yaku.ii_han.len() as u8
-                    + yaku.ryan_han.iter().map(|(_, value)| value).sum::<u8>()
-                    + yaku.san_han.iter().map(|(_, value)| value).sum::<u8>()
-                    + yaku.roku_han.iter().map(|(_, value)| value).sum::<u8>()
+                yaku.dora.iter().map(|entry| entry.value).sum::<u8>()
+                    + yaku.ii_han.iter().map(|entry| entry.value).sum::<u8>()
+                    + yaku.ryan_han.iter().map(|entry| entry.value).sum::<u8>()
+                    + yaku.san_han.iter().map(|entry| entry.value).sum::<u8>()
+                    + yaku.roku_han.iter().map(|entry| entry.value).sum::<u8>()
             }
-            FoundResult::FoundYakuman(yakuaman) => yakuaman.yakuman.len() as u8,
+            FoundResult::FoundYakuman(yakuaman) => {
+                yakuaman.yakuman.iter().map(|entry| entry.value).sum()
+            }
         }
     }
 
@@ -43,5 +47,20 @@ impl FoundResult {
             }
             FoundResult::FoundYakuman(yakuaman) => yakuaman.yakuman.len() > 0,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::finder::finder_base::YakuEntry;
+    use crate::finder::result::{FoundResult, FoundYakuman};
+
+    #[test]
+    fn count_yaku_uses_yakuman_value() {
+        let result = FoundResult::FoundYakuman(FoundYakuman {
+            yakuman: vec![YakuEntry::new("四暗刻単騎", 2)],
+        });
+
+        assert_eq!(result.count_yaku(), 2);
     }
 }

@@ -1,25 +1,25 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::{Status, WinMethod};
-use crate::finder::finder_base::YakuBase;
+use crate::finder::finder_base::{YakuBase, YakuEntry};
 use crate::finder::utils::is_menzen;
 
 pub struct Tumo;
 
 impl YakuBase for Tumo {
-    fn validate(_: &Field, hand: &WinningHand, status: &Status) -> Option<(String, u8)> {
+    fn validate(_: &Field, hand: &WinningHand, status: &Status) -> Option<YakuEntry> {
         if !is_menzen(&hand.hand) || status.win_method == WinMethod::Ron {
             return None;
         }
 
-        Some(("門前清自摸和".to_string(), 1))
+        Some(YakuEntry::new("門前清自摸和", 1))
     }
 }
 
 #[cfg(test)]
 mod valid {
     use crate::constants::status::WinMethod;
-    use crate::finder::finder_base::YakuBase;
+    use crate::finder::finder_base::{YakuBase, YakuEntry};
     use crate::finder::ii_han::tumo::Tumo;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_mentsu, random_status,
@@ -40,7 +40,7 @@ mod valid {
         status.win_method = WinMethod::Tumo;
         assert_eq!(
             Tumo::validate(&field, &winning_hand, &status),
-            Some(("門前清自摸和".to_string(), 1)),
+            Some(YakuEntry::new("門前清自摸和", 1)),
             "{:?}",
             hand
         );

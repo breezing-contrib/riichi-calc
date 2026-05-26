@@ -1,13 +1,13 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
-use crate::finder::finder_base::YakuBase;
+use crate::finder::finder_base::{YakuBase, YakuEntry};
 use crate::finder::utils::{check_kuisagari, split_colors};
 
 pub struct Chinitu;
 
 impl YakuBase for Chinitu {
-    fn validate(_: &Field, hand: &WinningHand, _: &Status) -> Option<(String, u8)> {
+    fn validate(_: &Field, hand: &WinningHand, _: &Status) -> Option<YakuEntry> {
         let (manzu, pinzu, sozu, wind, dragon) = split_colors(&hand.hand);
         let non_empty_count = [
             !manzu.is_empty(),
@@ -35,7 +35,7 @@ impl YakuBase for Chinitu {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::Tile;
-    use crate::finder::finder_base::YakuBase;
+    use crate::finder::finder_base::{YakuBase, YakuEntry};
     use crate::finder::roku_han::chinitu::Chinitu;
     use crate::finder::test_utils::{
         from_hand, random_field, random_status, random_suhai_tile_type,
@@ -81,7 +81,7 @@ mod valid {
 
         assert_eq!(
             Chinitu::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(("清一色".to_string(), 6)),
+            Some(YakuEntry::new("清一色", 6)),
             "{:?}",
             hand
         );
@@ -127,7 +127,7 @@ mod valid {
 
         assert_eq!(
             Chinitu::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(("清一色".to_string(), 5)),
+            Some(YakuEntry::new("清一色", 5)),
             "{:?}",
             hand
         );

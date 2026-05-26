@@ -2,12 +2,12 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::YakuBase;
+use crate::finder::finder_base::{YakuBase, YakuEntry};
 
 pub struct Shosangen;
 
 impl YakuBase for Shosangen {
-    fn validate(_: &Field, hand: &WinningHand, _: &Status) -> Option<(String, u8)> {
+    fn validate(_: &Field, hand: &WinningHand, _: &Status) -> Option<YakuEntry> {
         let mut dragon_count = 0;
 
         for mentsu in hand.hand {
@@ -29,7 +29,7 @@ impl YakuBase for Shosangen {
         }
 
         if dragon_count == 3 {
-            return Some(("小三元".to_string(), 2));
+            return Some(YakuEntry::new("小三元", 2));
         }
 
         None
@@ -40,7 +40,7 @@ impl YakuBase for Shosangen {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::YakuBase;
+    use crate::finder::finder_base::{YakuBase, YakuEntry};
     use crate::finder::ryan_han::shosangen::Shosangen;
     use crate::finder::test_utils::{from_hand, random_field, random_shuntu, random_status};
     use rand::random;
@@ -72,7 +72,7 @@ mod valid {
 
         assert_eq!(
             Shosangen::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(("小三元".to_string(), 2)),
+            Some(YakuEntry::new("小三元", 2)),
             "{:?}",
             hand
         );

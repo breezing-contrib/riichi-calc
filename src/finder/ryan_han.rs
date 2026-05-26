@@ -1,7 +1,7 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuValidator};
+use crate::finder::finder_base::{YakuBase, YakuEntry, YakuValidator};
 use crate::finder::ryan_han::chanta::Chanta;
 use crate::finder::ryan_han::double_riichi::DoubleRiichi;
 use crate::finder::ryan_han::honroto::Honroto;
@@ -24,11 +24,7 @@ mod sanshoku_doko;
 mod shosangen;
 mod toitoi;
 
-pub fn ryan_han_yaku(
-    field: &Field,
-    winning_hand: &WinningHand,
-    status: &Status,
-) -> Vec<(String, u8)> {
+pub fn ryan_han_yaku(field: &Field, winning_hand: &WinningHand, status: &Status) -> Vec<YakuEntry> {
     let validators: Vec<YakuValidator> = vec![
         DoubleRiichi::validate,
         SanshokuDoko::validate,

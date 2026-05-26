@@ -2,19 +2,19 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::YakuBase;
+use crate::finder::finder_base::{YakuBase, YakuEntry};
 
 pub struct Chun;
 
 impl YakuBase for Chun {
-    fn validate(_: &Field, winning_hand: &WinningHand, _: &Status) -> Option<(String, u8)> {
+    fn validate(_: &Field, winning_hand: &WinningHand, _: &Status) -> Option<YakuEntry> {
         for mentsu in winning_hand.hand {
             if let Mentsu::Janto(_) = mentsu {
                 continue;
             }
             let tile = mentsu.tile();
             if tile.tile_type == TileType::Dragon && tile.number == 3 {
-                return Some(("役牌:中".to_string(), 1));
+                return Some(YakuEntry::new("役牌:中", 1));
             }
         }
         None
@@ -25,7 +25,7 @@ impl YakuBase for Chun {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::YakuBase;
+    use crate::finder::finder_base::{YakuBase, YakuEntry};
     use crate::finder::ii_han::chun::Chun;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_mentsu, random_status,
@@ -52,7 +52,7 @@ mod valid {
         let status = random_status();
         assert_eq!(
             Chun::validate(&field, &winning_hand, &status),
-            Some(("役牌:中".to_string(), 1)),
+            Some(YakuEntry::new("役牌:中", 1)),
             "{:?}",
             hand
         );

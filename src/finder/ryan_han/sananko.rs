@@ -2,12 +2,12 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::{Status, WinMethod};
 use crate::constants::tiles::Tile;
-use crate::finder::finder_base::YakuBase;
+use crate::finder::finder_base::{YakuBase, YakuEntry};
 
 pub struct Sananko;
 
 impl YakuBase for Sananko {
-    fn validate(_: &Field, hand: &WinningHand, status: &Status) -> Option<(String, u8)> {
+    fn validate(_: &Field, hand: &WinningHand, status: &Status) -> Option<YakuEntry> {
         let mut anko_count = 0;
 
         for mentsu in hand.hand {
@@ -26,7 +26,7 @@ impl YakuBase for Sananko {
         }
 
         if status.win_method == WinMethod::Tumo || Self::is_ron_sananko(hand) {
-            return Some(("三暗刻".to_string(), 2));
+            return Some(YakuEntry::new("三暗刻", 2));
         }
 
         None
@@ -76,7 +76,7 @@ mod valid {
     use crate::constants::hand::{Mentsu, WinningHand};
     use crate::constants::status::WinMethod;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::YakuBase;
+    use crate::finder::finder_base::{YakuBase, YakuEntry};
     use crate::finder::ryan_han::sananko::Sananko;
     use crate::finder::test_utils::{
         random_field, random_janto, random_kantsu, random_koutsu, random_shuntu, random_status,
@@ -101,7 +101,7 @@ mod valid {
 
         assert_eq!(
             Sananko::validate(&random_field(), &winning_hand, &status),
-            Some(("三暗刻".to_string(), 2)),
+            Some(YakuEntry::new("三暗刻", 2)),
             "{:?}",
             hand
         );
@@ -126,7 +126,7 @@ mod valid {
 
         assert_eq!(
             Sananko::validate(&random_field(), &winning_hand, &status),
-            Some(("三暗刻".to_string(), 2)),
+            Some(YakuEntry::new("三暗刻", 2)),
             "{:?}",
             hand
         );
@@ -151,7 +151,7 @@ mod valid {
 
         assert_eq!(
             Sananko::validate(&random_field(), &winning_hand, &status),
-            Some(("三暗刻".to_string(), 2)),
+            Some(YakuEntry::new("三暗刻", 2)),
             "{:?}",
             hand
         );
@@ -203,7 +203,7 @@ mod valid {
 
         assert_eq!(
             Sananko::validate(&random_field(), &winning_hand, &status),
-            Some(("三暗刻".to_string(), 2)),
+            Some(YakuEntry::new("三暗刻", 2)),
             "{:?}",
             hand
         );

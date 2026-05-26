@@ -1,14 +1,14 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
-use crate::finder::finder_base::YakuBase;
+use crate::finder::finder_base::{YakuBase, YakuEntry};
 
 pub struct Aka;
 
 impl YakuBase for Aka {
-    fn validate(_: &Field, hand: &WinningHand, _: &Status) -> Option<(String, u8)> {
+    fn validate(_: &Field, hand: &WinningHand, _: &Status) -> Option<YakuEntry> {
         if hand.red_tile > 0 {
-            Some(("赤ドラ".to_string(), hand.red_tile))
+            Some(YakuEntry::new("赤ドラ", hand.red_tile))
         } else {
             None
         }
@@ -19,7 +19,7 @@ impl YakuBase for Aka {
 mod count {
     use crate::constants::hand::WinningHand;
     use crate::finder::dora::aka::Aka;
-    use crate::finder::finder_base::YakuBase;
+    use crate::finder::finder_base::{YakuBase, YakuEntry};
     use crate::finder::test_utils::{
         random_field, random_janto, random_mentsu, random_status, random_tile,
     };
@@ -41,7 +41,7 @@ mod count {
 
         assert_eq!(
             Aka::validate(&random_field(), &winning_hand, &random_status()),
-            Some(("赤ドラ".to_string(), 1))
+            Some(YakuEntry::new("赤ドラ", 1))
         );
     }
 

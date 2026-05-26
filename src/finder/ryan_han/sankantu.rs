@@ -1,12 +1,12 @@
 use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
-use crate::finder::finder_base::YakuBase;
+use crate::finder::finder_base::{YakuBase, YakuEntry};
 
 pub struct Sankantu;
 
 impl YakuBase for Sankantu {
-    fn validate(_: &Field, hand: &WinningHand, _: &Status) -> Option<(String, u8)> {
+    fn validate(_: &Field, hand: &WinningHand, _: &Status) -> Option<YakuEntry> {
         let mut kan_count = 0;
 
         for mentsu in hand.hand {
@@ -17,7 +17,7 @@ impl YakuBase for Sankantu {
         }
 
         if kan_count == 3 {
-            return Some(("三槓子".to_string(), 2));
+            return Some(YakuEntry::new("三槓子", 2));
         }
 
         None
@@ -26,7 +26,7 @@ impl YakuBase for Sankantu {
 
 #[cfg(test)]
 mod valid {
-    use crate::finder::finder_base::YakuBase;
+    use crate::finder::finder_base::{YakuBase, YakuEntry};
     use crate::finder::ryan_han::sankantu::Sankantu;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_kantsu, random_koutsu, random_status,
@@ -44,7 +44,7 @@ mod valid {
 
         assert_eq!(
             Sankantu::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(("三槓子".to_string(), 2)),
+            Some(YakuEntry::new("三槓子", 2)),
             "{:?}",
             hand
         );

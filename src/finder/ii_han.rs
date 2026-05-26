@@ -1,7 +1,7 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuValidator};
+use crate::finder::finder_base::{YakuBase, YakuEntry, YakuValidator};
 use crate::finder::ii_han::bakaze::Bakaze;
 use crate::finder::ii_han::chankan::Chankan;
 use crate::finder::ii_han::chun::Chun;
@@ -34,11 +34,7 @@ mod tanyao;
 mod tumo;
 mod zikaze;
 
-pub fn ii_han_yaku(
-    field: &Field,
-    winning_hand: &WinningHand,
-    status: &Status,
-) -> Vec<(String, u8)> {
+pub fn ii_han_yaku(field: &Field, winning_hand: &WinningHand, status: &Status) -> Vec<YakuEntry> {
     let validators: Vec<YakuValidator> = vec![
         Riichi::validate,
         Tanyao::validate,
