@@ -1,25 +1,24 @@
 # Riichi Calc
 
-Library to calculate the score of a hand in riichi mahjong
+Library to calculate the score of a hand in riichi mahjong.
 
 ## Example
 
 ```rust
 let input = Input::new(
-pi_input, // infomation about the pi in hand
-field, // information about the field
-status // player's status
+    pi_input, // information about the tiles in hand
+    field,    // information about the field
+    status,   // player's status
 );
 
-// calculation function
 let result = input.calc_hand();
 if result.is_err() {
-panic ! ("invalid input");
+    panic!("invalid input");
 }
 let result = result.unwrap();
 ```
 
-expected output
+Expected output includes the winning hand, found yaku, and score result:
 
 ```txt
 Output {
@@ -69,24 +68,24 @@ Output {
     found_result: FoundYaku(
         FoundYaku {
             dora: [
-                (
-                    "ドラ",
-                    1,
-                ),
-                (
-                    "裏ドラ",
-                    1,
-                ),
+                YakuEntry {
+                    kind: Dora,
+                    value: 1,
+                },
+                YakuEntry {
+                    kind: UraDora,
+                    value: 1,
+                },
             ],
             ii_han: [
-                (
-                    "立直",
-                    1,
-                ),
-                (
-                    "平和",
-                    1,
-                ),
+                YakuEntry {
+                    kind: Riichi,
+                    value: 1,
+                },
+                YakuEntry {
+                    kind: Pinfu,
+                    value: 1,
+                },
             ],
             ryan_han: [],
             san_han: [],
@@ -94,17 +93,14 @@ Output {
         },
     ),
     score_result: ScoreResult {
-        points: Ron(
-            11600,
-        ),
-        actual_points: Ron(
-            12200,
-        ),
+        points: Ron(11600),
+        actual_points: Ron(12200),
         detail: ScoreDetail {
             han: 4,
             fu: 30,
         },
     },
 }
-
 ```
+
+Use `YakuEntry::name()` to get the localized display name for each yaku. By default names are Japanese; enable the `zh-cn` feature to use simplified Chinese names.
