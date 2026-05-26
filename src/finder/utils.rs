@@ -1,7 +1,7 @@
 use crate::constants::field::Wind;
 use crate::constants::hand::{Hand, Mentsu};
 use crate::constants::tiles::{Tile, TileType};
-use crate::finder::finder_base::YakuEntry;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub fn is_menzen(hand: &Hand) -> bool {
     for mentsu in hand {
@@ -18,10 +18,10 @@ pub fn is_menzen(hand: &Hand) -> bool {
     true
 }
 
-pub fn check_kuisagari(hand: &Hand, yaku_name: String, han: u8) -> Option<YakuEntry> {
+pub fn check_kuisagari(hand: &Hand, kind: YakuKind, han: u8) -> Option<YakuEntry> {
     let han = if is_menzen(hand) { han } else { han - 1 };
 
-    Some(YakuEntry::new(yaku_name, han))
+    Some(YakuEntry::new(kind, han))
 }
 
 /**

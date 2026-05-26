@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Tanyao;
 
@@ -26,7 +27,7 @@ impl YakuBase for Tanyao {
             }
         }
 
-        Some(YakuEntry::new("断么九", 1))
+        Some(YakuEntry::new(YakuKind::Tanyao, 1))
     }
 }
 
@@ -70,12 +71,13 @@ mod tanyao_test_util {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::Tile;
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ii_han::tanyao::tanyao_test_util::generate_chuchan_pi_mentsu;
     use crate::finder::ii_han::tanyao::Tanyao;
     use crate::finder::test_utils::{
         from_hand, random_field, random_status, random_suhai_tile_type,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use rand::Rng;
 
     #[test]
@@ -95,7 +97,7 @@ mod valid {
         let status = random_status();
         assert_eq!(
             Tanyao::validate(&field, &winning_hand, &status),
-            Some(YakuEntry::new("断么九", 1)),
+            Some(YakuEntry::new(YakuKind::Tanyao, 1)),
             "{:?}",
             hand
         );

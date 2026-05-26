@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::{Tile, TileType};
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Ryuiso;
 
@@ -23,7 +24,7 @@ impl YakuBase for Ryuiso {
             }
         }
 
-        Some(YakuEntry::new("緑一色", 1))
+        Some(YakuEntry::new(YakuKind::Ryuiso, 1))
     }
 }
 
@@ -76,8 +77,9 @@ impl Ryuiso {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::test_utils::{from_hand, random_field, random_status};
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use crate::finder::yakuman::ryuiso::Ryuiso;
     use rand::random;
 
@@ -119,7 +121,7 @@ mod valid {
         ];
         assert_eq!(
             Ryuiso::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("緑一色", 1)),
+            Some(YakuEntry::new(YakuKind::Ryuiso, 1)),
             "{:?}",
             hand
         );

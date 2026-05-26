@@ -1,7 +1,8 @@
 use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct ToiToi;
 
@@ -14,17 +15,18 @@ impl YakuBase for ToiToi {
             }
         }
 
-        Some(YakuEntry::new("対対和", 2))
+        Some(YakuEntry::new(YakuKind::ToiToi, 2))
     }
 }
 
 #[cfg(test)]
 mod valid {
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ryan_han::toitoi::ToiToi;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_koutsu, random_status,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
 
     #[test]
     fn valid_toitoi() {
@@ -38,7 +40,7 @@ mod valid {
 
         assert_eq!(
             ToiToi::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("対対和", 2)),
+            Some(YakuEntry::new(YakuKind::ToiToi, 2)),
             "{:?}",
             hand
         );

@@ -1,21 +1,7 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct YakuEntry {
-    pub name: String,
-    pub value: u8,
-}
-
-impl YakuEntry {
-    pub fn new(name: impl Into<String>, value: u8) -> Self {
-        Self {
-            name: name.into(),
-            value,
-        }
-    }
-}
+use crate::finder::yaku::YakuEntry;
 
 pub type YakuValidator = fn(&Field, &WinningHand, &Status) -> Option<YakuEntry>;
 

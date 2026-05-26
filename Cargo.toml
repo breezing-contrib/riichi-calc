@@ -17,5 +17,9 @@ exclude = [
 [dependencies]
 rand = "0.8.5"
 
+[features]
+default = []
+zh-cn = []
+
 [dev-dependencies]
 lazy_static = "1.5.0"

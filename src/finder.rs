@@ -8,4 +8,5 @@ mod ryan_han;
 mod san_han;
 mod test_utils;
 mod utils;
+pub mod yaku;
 mod yakuman;

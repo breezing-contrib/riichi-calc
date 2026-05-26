@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct ChinRoto;
 
@@ -28,7 +29,7 @@ impl YakuBase for ChinRoto {
             }
         }
 
-        Some(YakuEntry::new("清老頭", 1))
+        Some(YakuEntry::new(YakuKind::Chinroto, 1))
     }
 }
 

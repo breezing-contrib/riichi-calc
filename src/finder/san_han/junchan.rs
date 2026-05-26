@@ -2,8 +2,9 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
 use crate::finder::utils::check_kuisagari;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Junchan;
 
@@ -30,7 +31,7 @@ impl YakuBase for Junchan {
             }
         }
 
-        check_kuisagari(&hand.hand, "純全帯么九".to_string(), 3)
+        check_kuisagari(&hand.hand, YakuKind::Junchan, 3)
     }
 }
 
@@ -38,9 +39,10 @@ impl YakuBase for Junchan {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::san_han::junchan::Junchan;
     use crate::finder::test_utils::{from_hand, random_field, random_status};
+    use crate::finder::yaku::{YakuEntry, YakuKind};
 
     #[test]
     fn valid_junchan() {
@@ -81,7 +83,7 @@ mod valid {
 
         assert_eq!(
             Junchan::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("純全帯么九", 3)),
+            Some(YakuEntry::new(YakuKind::Junchan, 3)),
             "{:?}",
             hand
         );
@@ -126,7 +128,7 @@ mod valid {
 
         assert_eq!(
             Junchan::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("純全帯么九", 2)),
+            Some(YakuEntry::new(YakuKind::Junchan, 2)),
             "{:?}",
             hand
         );

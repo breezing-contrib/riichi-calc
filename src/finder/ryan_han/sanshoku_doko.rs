@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct SanshokuDoko;
 
@@ -25,7 +26,7 @@ impl YakuBase for SanshokuDoko {
         for number in suhai.clone() {
             let count = count_u8_in_vec(number, &suhai);
             if count == 3 {
-                return Some(YakuEntry::new("三色同刻", 2));
+                return Some(YakuEntry::new(YakuKind::SanshokuDoko, 2));
             }
         }
 
@@ -41,11 +42,12 @@ fn count_u8_in_vec(target: u8, vec: &Vec<u8>) -> usize {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ryan_han::sanshoku_doko::SanshokuDoko;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_shuntu, random_status,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use rand::{random, Rng};
 
     #[test]
@@ -79,7 +81,7 @@ mod valid {
 
         assert_eq!(
             SanshokuDoko::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("三色同刻", 2)),
+            Some(YakuEntry::new(YakuKind::SanshokuDoko, 2)),
             "{:?}",
             hand
         );

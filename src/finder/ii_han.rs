@@ -1,7 +1,7 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuEntry, YakuValidator};
+use crate::finder::finder_base::{YakuBase, YakuValidator};
 use crate::finder::ii_han::bakaze::Bakaze;
 use crate::finder::ii_han::chankan::Chankan;
 use crate::finder::ii_han::chun::Chun;
@@ -17,6 +17,7 @@ use crate::finder::ii_han::rinshan::Rinshan;
 use crate::finder::ii_han::tanyao::Tanyao;
 use crate::finder::ii_han::tumo::Tumo;
 use crate::finder::ii_han::zikaze::Zikaze;
+use crate::finder::yaku::YakuEntry;
 
 mod bakaze;
 mod chankan;

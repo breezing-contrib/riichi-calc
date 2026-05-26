@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
 use crate::finder::dora::dora_finder::find_dora;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Omote;
 
@@ -11,7 +12,7 @@ impl YakuBase for Omote {
         let dora_count = find_dora(&field.dora, &hand.hand);
 
         if dora_count > 0 {
-            Some(YakuEntry::new("ドラ", dora_count))
+            Some(YakuEntry::new(YakuKind::Dora, dora_count))
         } else {
             None
         }
@@ -23,8 +24,9 @@ mod count {
     use crate::constants::hand::{Mentsu, WinningHand};
     use crate::constants::tiles::{Tile, TileType};
     use crate::finder::dora::omote::Omote;
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::test_utils::{from_hand, random_field, random_status};
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use lazy_static::lazy_static;
 
     lazy_static! {
@@ -74,7 +76,7 @@ mod count {
 
         assert_eq!(
             Omote::validate(&field, &WINNING_HAND, &random_status()),
-            Some(YakuEntry::new("ドラ", 1))
+            Some(YakuEntry::new(YakuKind::Dora, 1))
         );
     }
 
@@ -88,7 +90,7 @@ mod count {
 
         assert_eq!(
             Omote::validate(&field, &WINNING_HAND, &random_status()),
-            Some(YakuEntry::new("ドラ", 3))
+            Some(YakuEntry::new(YakuKind::Dora, 3))
         );
     }
 
@@ -102,7 +104,7 @@ mod count {
 
         assert_eq!(
             Omote::validate(&field, &WINNING_HAND, &random_status()),
-            Some(YakuEntry::new("ドラ", 4))
+            Some(YakuEntry::new(YakuKind::Dora, 4))
         );
     }
 

@@ -1,8 +1,9 @@
 use crate::constants::field::Field;
 use crate::constants::hand::{Hand, Mentsu, WinningHand};
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
 use crate::finder::utils::{is_menzen, split_colors};
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Churen;
 
@@ -47,9 +48,9 @@ impl YakuBase for Churen {
         numbers[hora_number as usize - 1] -= 1;
 
         if Self::is_churen_hand(&numbers) {
-            Some(YakuEntry::new("純正九蓮宝燈", 2))
+            Some(YakuEntry::new(YakuKind::JunseiChuren, 2))
         } else {
-            Some(YakuEntry::new("九蓮宝燈", 1))
+            Some(YakuEntry::new(YakuKind::Churen, 1))
         }
     }
 }
@@ -88,8 +89,9 @@ impl Churen {
 mod valid {
     use crate::constants::hand::{Hand, Mentsu, WinningHand};
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::test_utils::{random_field, random_status, random_suhai_tile_type};
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use crate::finder::yakuman::churen::Churen;
     use lazy_static::lazy_static;
 
@@ -148,7 +150,7 @@ mod valid {
 
         assert_eq!(
             Churen::validate(&random_field(), &winning, &random_status()),
-            Some(YakuEntry::new("九蓮宝燈", 1)),
+            Some(YakuEntry::new(YakuKind::Churen, 1)),
             "{:?}",
             hand
         );
@@ -168,7 +170,7 @@ mod valid {
 
         assert_eq!(
             Churen::validate(&random_field(), &winning, &random_status()),
-            Some(YakuEntry::new("純正九蓮宝燈", 2)),
+            Some(YakuEntry::new(YakuKind::JunseiChuren, 2)),
             "{:?}",
             hand
         );
@@ -188,7 +190,7 @@ mod valid {
 
         assert_eq!(
             Churen::validate(&random_field(), &winning, &random_status()),
-            Some(YakuEntry::new("九蓮宝燈", 1)),
+            Some(YakuEntry::new(YakuKind::Churen, 1)),
             "{:?}",
             hand
         );

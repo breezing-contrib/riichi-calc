@@ -1,7 +1,8 @@
 use crate::constants::field::{Field, Wind};
 use crate::constants::hand::WinningHand;
 use crate::constants::status::{SpecialWin, Status, WinMethod};
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Tenho;
 
@@ -11,7 +12,7 @@ impl YakuBase for Tenho {
             && status.win_method.eq(&WinMethod::Tumo)
             && field.zikaze.eq(&Wind::East)
         {
-            return Some(YakuEntry::new("天和", 1));
+            return Some(YakuEntry::new(YakuKind::Tenho, 1));
         }
 
         None
@@ -22,10 +23,11 @@ impl YakuBase for Tenho {
 mod valid {
     use crate::constants::field::Wind;
     use crate::constants::status::{SpecialWin, WinMethod};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_mentsu, random_status,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use crate::finder::yakuman::tenho::Tenho;
 
     #[test]
@@ -45,7 +47,7 @@ mod valid {
         status.win_method = WinMethod::Tumo;
         assert_eq!(
             Tenho::validate(&field, &winning_hand, &status),
-            Some(YakuEntry::new("天和", 1)),
+            Some(YakuEntry::new(YakuKind::Tenho, 1)),
             "{:?}",
             hand
         );

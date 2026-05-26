@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::{RiichiStatus, Status};
 use crate::finder::dora::dora_finder::find_dora;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Ura;
 
@@ -12,7 +13,7 @@ impl YakuBase for Ura {
             RiichiStatus::NoRiichi => None,
             RiichiStatus::Riichi(dora) | RiichiStatus::DoubleRiichi(dora) => {
                 let dora_count = find_dora(&dora, &hand.hand);
-                Some(YakuEntry::new("裏ドラ", dora_count))
+                Some(YakuEntry::new(YakuKind::UraDora, dora_count))
             }
         }
     }
@@ -24,8 +25,9 @@ mod count {
     use crate::constants::status::RiichiStatus;
     use crate::constants::tiles::{Tile, TileType};
     use crate::finder::dora::ura::Ura;
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::test_utils::{from_hand, random_field, random_status};
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use lazy_static::lazy_static;
 
     lazy_static! {
@@ -75,7 +77,7 @@ mod count {
 
         assert_eq!(
             Ura::validate(&random_field(), &WINNING_HAND, &status),
-            Some(YakuEntry::new("裏ドラ", 1))
+            Some(YakuEntry::new(YakuKind::UraDora, 1))
         );
     }
 
@@ -89,7 +91,7 @@ mod count {
 
         assert_eq!(
             Ura::validate(&random_field(), &WINNING_HAND, &status),
-            Some(YakuEntry::new("裏ドラ", 0))
+            Some(YakuEntry::new(YakuKind::UraDora, 0))
         );
     }
 
@@ -103,7 +105,7 @@ mod count {
 
         assert_eq!(
             Ura::validate(&random_field(), &WINNING_HAND, &status),
-            Some(YakuEntry::new("裏ドラ", 0))
+            Some(YakuEntry::new(YakuKind::UraDora, 0))
         );
     }
 

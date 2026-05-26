@@ -1,8 +1,9 @@
 use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
 use crate::finder::utils::{check_kuisagari, split_colors};
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Ixtukitukan;
 
@@ -11,7 +12,7 @@ impl YakuBase for Ixtukitukan {
         let (manzu, pinzu, sozu, _, _) = split_colors(&hand.hand);
 
         if Self::check_shuntu(manzu) | Self::check_shuntu(pinzu) | Self::check_shuntu(sozu) {
-            return check_kuisagari(&hand.hand, "一気通貫".to_string(), 2);
+            return check_kuisagari(&hand.hand, YakuKind::Ixtukitukan, 2);
         }
 
         None
@@ -39,11 +40,12 @@ impl Ixtukitukan {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::Tile;
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ryan_han::ixtukitukan::Ixtukitukan;
     use crate::finder::test_utils::{
         from_hand, random_field, random_status, random_suhai_tile_type, random_tile,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
 
     #[test]
     fn valid_ixtukitukan() {
@@ -75,7 +77,7 @@ mod valid {
         ];
         assert_eq!(
             Ixtukitukan::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("一気通貫", 2)),
+            Some(YakuEntry::new(YakuKind::Ixtukitukan, 2)),
             "{:?}",
             hand
         );
@@ -111,7 +113,7 @@ mod valid {
         ];
         assert_eq!(
             Ixtukitukan::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("一気通貫", 1)),
+            Some(YakuEntry::new(YakuKind::Ixtukitukan, 1)),
             "{:?}",
             hand
         );

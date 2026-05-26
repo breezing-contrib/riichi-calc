@@ -1,4 +1,4 @@
-use crate::finder::finder_base::YakuEntry;
+use crate::finder::yaku::YakuEntry;
 
 /// represents which yaku was found
 #[derive(Debug)]
@@ -52,13 +52,13 @@ impl FoundResult {
 
 #[cfg(test)]
 mod tests {
-    use crate::finder::finder_base::YakuEntry;
     use crate::finder::result::{FoundResult, FoundYakuman};
+    use crate::finder::yaku::{YakuEntry, YakuKind};
 
     #[test]
     fn count_yaku_uses_yakuman_value() {
         let result = FoundResult::FoundYakuman(FoundYakuman {
-            yakuman: vec![YakuEntry::new("四暗刻単騎", 2)],
+            yakuman: vec![YakuEntry::new(YakuKind::SuankoTanki, 2)],
         });
 
         assert_eq!(result.count_yaku(), 2);

@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::{Tile, TileType};
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Shosushi;
 
@@ -35,9 +36,9 @@ impl YakuBase for Shosushi {
         }
 
         if janto.is_some() {
-            Some(YakuEntry::new("小四喜", 1))
+            Some(YakuEntry::new(YakuKind::Shosushi, 1))
         } else {
-            Some(YakuEntry::new("大四喜", 2))
+            Some(YakuEntry::new(YakuKind::Daisushi, 2))
         }
     }
 }
@@ -46,10 +47,11 @@ impl YakuBase for Shosushi {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_mentsu, random_status,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use crate::finder::yakuman::shosushi::Shosushi;
     use rand::random;
 
@@ -86,7 +88,7 @@ mod valid {
 
         assert_eq!(
             Shosushi::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("小四喜", 1)),
+            Some(YakuEntry::new(YakuKind::Shosushi, 1)),
             "{:?}",
             hand
         );
@@ -128,7 +130,7 @@ mod valid {
 
         assert_eq!(
             Shosushi::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("大四喜", 2)),
+            Some(YakuEntry::new(YakuKind::Daisushi, 2)),
             "{:?}",
             hand
         );

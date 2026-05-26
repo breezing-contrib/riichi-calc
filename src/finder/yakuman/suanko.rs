@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::{Status, WinMethod};
 use crate::constants::tiles::Tile;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Suanko;
 
@@ -29,9 +30,9 @@ impl YakuBase for Suanko {
             return None;
         };
         if hand.winning_tile == janto {
-            Some(YakuEntry::new("四暗刻単騎", 2))
+            Some(YakuEntry::new(YakuKind::SuankoTanki, 2))
         } else if status.win_method == WinMethod::Tumo {
-            Some(YakuEntry::new("四暗刻", 1))
+            Some(YakuEntry::new(YakuKind::Suanko, 1))
         } else {
             None
         }
@@ -65,8 +66,9 @@ mod util {
 mod valid {
     use crate::constants::hand::WinningHand;
     use crate::constants::status::WinMethod;
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::test_utils::{random_field, random_status};
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use crate::finder::yakuman::suanko::util::generate_hand;
     use crate::finder::yakuman::suanko::Suanko;
 
@@ -83,7 +85,7 @@ mod valid {
 
         assert_eq!(
             Suanko::validate(&random_field(), &winning_hand, &status),
-            Some(YakuEntry::new("四暗刻", 1)),
+            Some(YakuEntry::new(YakuKind::Suanko, 1)),
             "{:?}",
             hand
         );
@@ -101,7 +103,7 @@ mod valid {
 
         assert_eq!(
             Suanko::validate(&random_field(), &winning_hand, &status),
-            Some(YakuEntry::new("四暗刻単騎", 2)),
+            Some(YakuEntry::new(YakuKind::SuankoTanki, 2)),
             "{:?}",
             hand
         );

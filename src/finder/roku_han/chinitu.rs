@@ -1,8 +1,9 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
 use crate::finder::utils::{check_kuisagari, split_colors};
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Chinitu;
 
@@ -27,7 +28,7 @@ impl YakuBase for Chinitu {
             return None;
         }
 
-        check_kuisagari(&hand.hand, "清一色".to_string(), 6)
+        check_kuisagari(&hand.hand, YakuKind::Chinitu, 6)
     }
 }
 
@@ -35,11 +36,12 @@ impl YakuBase for Chinitu {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::Tile;
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::roku_han::chinitu::Chinitu;
     use crate::finder::test_utils::{
         from_hand, random_field, random_status, random_suhai_tile_type,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
 
     #[test]
     fn valid_chinitu() {
@@ -81,7 +83,7 @@ mod valid {
 
         assert_eq!(
             Chinitu::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("清一色", 6)),
+            Some(YakuEntry::new(YakuKind::Chinitu, 6)),
             "{:?}",
             hand
         );
@@ -127,7 +129,7 @@ mod valid {
 
         assert_eq!(
             Chinitu::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("清一色", 5)),
+            Some(YakuEntry::new(YakuKind::Chinitu, 5)),
             "{:?}",
             hand
         );

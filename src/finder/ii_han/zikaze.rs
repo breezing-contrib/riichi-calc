@@ -2,8 +2,9 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
 use crate::finder::utils::is_same_wind;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Zikaze;
 
@@ -18,7 +19,7 @@ impl YakuBase for Zikaze {
                 continue;
             }
             if is_same_wind(tile.number, &field.zikaze) {
-                return Some(YakuEntry::new("役牌:自風牌", 1));
+                return Some(YakuEntry::new(YakuKind::Zikaze, 1));
             }
         }
         None
@@ -30,11 +31,12 @@ mod valid {
     use crate::constants::field::Wind;
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ii_han::zikaze::Zikaze;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_mentsu, random_status,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use rand::random;
 
     #[test]
@@ -56,7 +58,7 @@ mod valid {
         ];
         assert_eq!(
             Zikaze::validate(&field, &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("役牌:自風牌", 1))
+            Some(YakuEntry::new(YakuKind::Zikaze, 1))
         );
     }
 }

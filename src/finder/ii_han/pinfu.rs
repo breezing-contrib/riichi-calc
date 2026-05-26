@@ -2,8 +2,9 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::{Tile, TileType};
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
 use crate::finder::utils::is_same_wind;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Pinfu;
 
@@ -28,7 +29,7 @@ impl YakuBase for Pinfu {
         if !Self::is_riyanmen(&hand) {
             return None;
         }
-        Some(YakuEntry::new("平和", 1))
+        Some(YakuEntry::new(YakuKind::Pinfu, 1))
     }
 }
 
@@ -84,11 +85,12 @@ mod valid {
     use crate::constants::field::{Field, Wind};
     use crate::constants::hand::{Mentsu, WinningHand};
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ii_han::pinfu::Pinfu;
     use crate::finder::test_utils::{
         random_field, random_janto, random_shuntu, random_shuntu_number, random_status, random_tile,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
 
     #[test]
     fn valid_pinfu() {
@@ -109,7 +111,7 @@ mod valid {
         let status = random_status();
         assert_eq!(
             Pinfu::validate(&field, &winning_hand, &status),
-            Some(YakuEntry::new("平和", 1)),
+            Some(YakuEntry::new(YakuKind::Pinfu, 1)),
             "{:?}",
             hand
         );
@@ -161,7 +163,7 @@ mod valid {
         let status = random_status();
         assert_eq!(
             Pinfu::validate(&field, &winning_hand, &status),
-            Some(YakuEntry::new("平和", 1)),
+            Some(YakuEntry::new(YakuKind::Pinfu, 1)),
             "{:?}",
             hand
         );
@@ -194,7 +196,7 @@ mod valid {
         let status = random_status();
         assert_eq!(
             Pinfu::validate(&field, &winning_hand, &status),
-            Some(YakuEntry::new("平和", 1)),
+            Some(YakuEntry::new(YakuKind::Pinfu, 1)),
             "{:?}",
             hand
         );

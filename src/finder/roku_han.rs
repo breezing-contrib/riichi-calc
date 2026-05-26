@@ -1,8 +1,9 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuEntry, YakuValidator};
+use crate::finder::finder_base::{YakuBase, YakuValidator};
 use crate::finder::roku_han::chinitu::Chinitu;
+use crate::finder::yaku::YakuEntry;
 
 mod chinitu;
 

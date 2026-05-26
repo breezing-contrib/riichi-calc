@@ -2,8 +2,9 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
 use crate::finder::utils::check_kuisagari;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Chanta;
 
@@ -36,7 +37,7 @@ impl YakuBase for Chanta {
             return None;
         }
 
-        check_kuisagari(&hand.hand, "混全帯么九".to_string(), 2)
+        check_kuisagari(&hand.hand, YakuKind::Chanta, 2)
     }
 }
 
@@ -44,9 +45,10 @@ impl YakuBase for Chanta {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ryan_han::chanta::Chanta;
     use crate::finder::test_utils::{from_hand, random_field, random_status};
+    use crate::finder::yaku::{YakuEntry, YakuKind};
 
     #[test]
     fn valid_chanta() {
@@ -87,7 +89,7 @@ mod valid {
         let winning_hand = from_hand(hand);
         assert_eq!(
             Chanta::validate(&random_field(), &winning_hand, &random_status()),
-            Some(YakuEntry::new("混全帯么九", 2)),
+            Some(YakuEntry::new(YakuKind::Chanta, 2)),
             "{:?}",
             hand
         );
@@ -132,7 +134,7 @@ mod valid {
         let winning_hand = from_hand(hand);
         assert_eq!(
             Chanta::validate(&random_field(), &winning_hand, &random_status()),
-            Some(YakuEntry::new("混全帯么九", 1)),
+            Some(YakuEntry::new(YakuKind::Chanta, 1)),
             "{:?}",
             hand
         );

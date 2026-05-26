@@ -1,14 +1,15 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::{SpecialWin, Status};
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Haitei;
 
 impl YakuBase for Haitei {
     fn validate(_: &Field, _: &WinningHand, status: &Status) -> Option<YakuEntry> {
         if status.special_win.contains(&SpecialWin::Haitei) {
-            return Some(YakuEntry::new("海底自摸", 1));
+            return Some(YakuEntry::new(YakuKind::Haitei, 1));
         }
 
         None
@@ -18,11 +19,12 @@ impl YakuBase for Haitei {
 #[cfg(test)]
 mod valid {
     use crate::constants::status::SpecialWin;
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ii_han::haitei::Haitei;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_mentsu, random_status,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
 
     #[test]
     fn valid_haitei() {
@@ -39,7 +41,7 @@ mod valid {
         status.special_win.insert(SpecialWin::Haitei);
         assert_eq!(
             Haitei::validate(&field, &winning_hand, &status),
-            Some(YakuEntry::new("海底自摸", 1)),
+            Some(YakuEntry::new(YakuKind::Haitei, 1)),
             "{:?}",
             hand
         );

@@ -1,8 +1,9 @@
 use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
 use crate::finder::utils::is_menzen;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 use std::collections::HashSet;
 
 pub struct RiyanPeco;
@@ -35,7 +36,7 @@ impl YakuBase for RiyanPeco {
             return None;
         }
 
-        Some(YakuEntry::new("二盃口", 3))
+        Some(YakuEntry::new(YakuKind::RiyanPeco, 3))
     }
 }
 
@@ -43,11 +44,12 @@ impl YakuBase for RiyanPeco {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::Tile;
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::san_han::riyan_peco::RiyanPeco;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_status, random_suhai_tile_type,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
 
     #[test]
     fn valid_riyanpeco() {
@@ -89,7 +91,7 @@ mod valid {
 
         assert_eq!(
             RiyanPeco::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("二盃口", 3)),
+            Some(YakuEntry::new(YakuKind::RiyanPeco, 3)),
             "{:?}",
             hand
         );

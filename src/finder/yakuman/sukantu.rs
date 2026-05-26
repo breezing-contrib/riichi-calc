@@ -1,7 +1,8 @@
 use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Sukantu;
 
@@ -18,16 +19,17 @@ impl YakuBase for Sukantu {
             }
         }
 
-        Some(YakuEntry::new("四槓子", 1))
+        Some(YakuEntry::new(YakuKind::Sukantu, 1))
     }
 }
 
 #[cfg(test)]
 mod valid {
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_kantsu, random_status,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use crate::finder::yakuman::sukantu::Sukantu;
 
     #[test]
@@ -42,7 +44,7 @@ mod valid {
 
         assert_eq!(
             Sukantu::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("四槓子", 1)),
+            Some(YakuEntry::new(YakuKind::Sukantu, 1)),
             "{:?}",
             hand
         );

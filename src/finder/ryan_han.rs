@@ -1,7 +1,7 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuEntry, YakuValidator};
+use crate::finder::finder_base::{YakuBase, YakuValidator};
 use crate::finder::ryan_han::chanta::Chanta;
 use crate::finder::ryan_han::double_riichi::DoubleRiichi;
 use crate::finder::ryan_han::honroto::Honroto;
@@ -12,6 +12,7 @@ use crate::finder::ryan_han::sanshoku_dojun::SanshokuDojun;
 use crate::finder::ryan_han::sanshoku_doko::SanshokuDoko;
 use crate::finder::ryan_han::shosangen::Shosangen;
 use crate::finder::ryan_han::toitoi::ToiToi;
+use crate::finder::yaku::YakuEntry;
 
 mod chanta;
 mod double_riichi;

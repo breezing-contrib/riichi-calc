@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Haku;
 
@@ -14,7 +15,7 @@ impl YakuBase for Haku {
             }
             let tile = mentsu.tile();
             if tile.tile_type == TileType::Dragon && tile.number == 1 {
-                return Some(YakuEntry::new("役牌:白", 1));
+                return Some(YakuEntry::new(YakuKind::Haku, 1));
             }
         }
         None
@@ -25,11 +26,12 @@ impl YakuBase for Haku {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ii_han::haku::Haku;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_mentsu, random_status,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use rand::random;
 
     #[test]
@@ -52,7 +54,7 @@ mod valid {
         let status = random_status();
         assert_eq!(
             Haku::validate(&field, &winning_hand, &status),
-            Some(YakuEntry::new("役牌:白", 1)),
+            Some(YakuEntry::new(YakuKind::Haku, 1)),
             "{:?}",
             hand
         );

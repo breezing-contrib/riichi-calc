@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Shosangen;
 
@@ -29,7 +30,7 @@ impl YakuBase for Shosangen {
         }
 
         if dragon_count == 3 {
-            return Some(YakuEntry::new("小三元", 2));
+            return Some(YakuEntry::new(YakuKind::Shosangen, 2));
         }
 
         None
@@ -40,9 +41,10 @@ impl YakuBase for Shosangen {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ryan_han::shosangen::Shosangen;
     use crate::finder::test_utils::{from_hand, random_field, random_shuntu, random_status};
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use rand::random;
 
     #[test]
@@ -72,7 +74,7 @@ mod valid {
 
         assert_eq!(
             Shosangen::validate(&random_field(), &from_hand(hand), &random_status()),
-            Some(YakuEntry::new("小三元", 2)),
+            Some(YakuEntry::new(YakuKind::Shosangen, 2)),
             "{:?}",
             hand
         );

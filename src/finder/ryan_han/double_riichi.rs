@@ -2,14 +2,15 @@ use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::RiichiStatus::DoubleRiichi as DoubleRiichiStatus;
 use crate::constants::status::Status;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct DoubleRiichi;
 
 impl YakuBase for DoubleRiichi {
     fn validate(_: &Field, _: &WinningHand, status: &Status) -> Option<YakuEntry> {
         match status.riichi {
-            DoubleRiichiStatus(_) => Some(YakuEntry::new("ダブルリーチ", 2)),
+            DoubleRiichiStatus(_) => Some(YakuEntry::new(YakuKind::DoubleRiichi, 2)),
             _ => None,
         }
     }
@@ -18,11 +19,12 @@ impl YakuBase for DoubleRiichi {
 #[cfg(test)]
 mod valid {
     use crate::constants::status::RiichiStatus;
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ryan_han::double_riichi::DoubleRiichi;
     use crate::finder::test_utils::{
         from_hand, random_field, random_janto, random_mentsu, random_status, random_tile,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
 
     #[test]
     fn valid_double_riichi() {
@@ -39,7 +41,7 @@ mod valid {
         status.riichi = RiichiStatus::DoubleRiichi(vec![random_tile()]);
         assert_eq!(
             DoubleRiichi::validate(&field, &winning_hand, &status),
-            Some(YakuEntry::new("ダブルリーチ", 2)),
+            Some(YakuEntry::new(YakuKind::DoubleRiichi, 2)),
             "{:?}",
             hand
         );

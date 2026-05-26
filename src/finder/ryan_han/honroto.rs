@@ -2,7 +2,8 @@ use crate::constants::field::Field;
 use crate::constants::hand::{Mentsu, WinningHand};
 use crate::constants::status::Status;
 use crate::constants::tiles::TileType;
-use crate::finder::finder_base::{YakuBase, YakuEntry};
+use crate::finder::finder_base::YakuBase;
+use crate::finder::yaku::{YakuEntry, YakuKind};
 
 pub struct Honroto;
 
@@ -33,7 +34,7 @@ impl YakuBase for Honroto {
             return None;
         }
 
-        Some(YakuEntry::new("混老頭", 2))
+        Some(YakuEntry::new(YakuKind::Honroto, 2))
     }
 }
 
@@ -41,11 +42,12 @@ impl YakuBase for Honroto {
 mod valid {
     use crate::constants::hand::Mentsu;
     use crate::constants::tiles::{Tile, TileType};
-    use crate::finder::finder_base::{YakuBase, YakuEntry};
+    use crate::finder::finder_base::YakuBase;
     use crate::finder::ryan_han::honroto::Honroto;
     use crate::finder::test_utils::{
         from_hand, random_field, random_status, random_suhai_tile_type,
     };
+    use crate::finder::yaku::{YakuEntry, YakuKind};
     use rand::random;
 
     #[test]
@@ -87,7 +89,7 @@ mod valid {
         let winning_hand = from_hand(hand);
         assert_eq!(
             Honroto::validate(&random_field(), &winning_hand, &random_status()),
-            Some(YakuEntry::new("混老頭", 2)),
+            Some(YakuEntry::new(YakuKind::Honroto, 2)),
             "{:?}",
             hand
         );
