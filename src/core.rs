@@ -16,9 +16,9 @@ pub enum CalcError {
 #[derive(Debug)]
 #[allow(dead_code)]
 pub struct Output {
-    winning_hand: WinningHand,
-    found_result: FoundResult,
-    score_result: ScoreResult,
+    pub winning_hand: WinningHand,
+    pub found_result: FoundResult,
+    pub score_result: ScoreResult,
 }
 
 type Outputs = Vec<Output>;
