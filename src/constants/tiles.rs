@@ -1,4 +1,5 @@
 use std::fmt;
+use std::str::FromStr;
 
 ///
 /// # Types
@@ -54,8 +55,221 @@ pub struct Tile {
     pub tile_type: TileType,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ParseTileError {
+    InvalidFormat,
+    InvalidNumber,
+    InvalidTileType,
+}
+
+impl FromStr for Tile {
+    type Err = ParseTileError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s.len() != 2 {
+            return Err(ParseTileError::InvalidFormat);
+        }
+
+        let mut chars = s.chars();
+        let number = chars
+            .next()
+            .and_then(|c| c.to_digit(10))
+            .ok_or(ParseTileError::InvalidNumber)? as u8;
+        let suffix = chars.next().ok_or(ParseTileError::InvalidFormat)?;
+
+        if number == 0 {
+            return Err(ParseTileError::InvalidNumber);
+        }
+
+        match suffix {
+            'm' if number <= 9 => Ok(Tile {
+                number,
+                tile_type: TileType::Manzu,
+            }),
+            'p' if number <= 9 => Ok(Tile {
+                number,
+                tile_type: TileType::Pinzu,
+            }),
+            's' if number <= 9 => Ok(Tile {
+                number,
+                tile_type: TileType::Souzu,
+            }),
+            'z' if number <= 4 => Ok(Tile {
+                number,
+                tile_type: TileType::Wind,
+            }),
+            'z' if number <= 7 => Ok(Tile {
+                number: number - 4,
+                tile_type: TileType::Dragon,
+            }),
+            'm' | 'p' | 's' | 'z' => Err(ParseTileError::InvalidNumber),
+            _ => Err(ParseTileError::InvalidTileType),
+        }
+    }
+}
+
 impl fmt::Display for Tile {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}{}", self.tile_type, self.number)
+        match self.tile_type {
+            TileType::Manzu => format_suhai_code(f, self.number, 'm'),
+            TileType::Pinzu => format_suhai_code(f, self.number, 'p'),
+            TileType::Souzu => format_suhai_code(f, self.number, 's'),
+            TileType::Wind => match self.number {
+                1..=4 => write!(f, "{}z", self.number),
+                _ => panic!("invalid wind tile number: {}", self.number),
+            },
+            TileType::Dragon => match self.number {
+                1..=3 => write!(f, "{}z", self.number + 4),
+                _ => panic!("invalid dragon tile number: {}", self.number),
+            },
+        }
+    }
+}
+
+fn format_suhai_code(f: &mut fmt::Formatter, number: u8, suffix: char) -> fmt::Result {
+    match number {
+        1..=9 => write!(f, "{}{}", number, suffix),
+        _ => panic!("invalid number tile number: {}", number),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{ParseTileError, Tile, TileType};
+
+    #[test]
+    fn parses_suhai_codes() {
+        assert_eq!(
+            "1m".parse::<Tile>(),
+            Ok(Tile {
+                number: 1,
+                tile_type: TileType::Manzu,
+            })
+        );
+        assert_eq!(
+            "9p".parse::<Tile>(),
+            Ok(Tile {
+                number: 9,
+                tile_type: TileType::Pinzu,
+            })
+        );
+        assert_eq!(
+            "1s".parse::<Tile>(),
+            Ok(Tile {
+                number: 1,
+                tile_type: TileType::Souzu,
+            })
+        );
+    }
+
+    #[test]
+    fn parses_honor_codes() {
+        for number in 1..=4 {
+            assert_eq!(
+                format!("{}z", number).parse::<Tile>(),
+                Ok(Tile {
+                    number,
+                    tile_type: TileType::Wind,
+                })
+            );
+        }
+
+        for number in 5..=7 {
+            assert_eq!(
+                format!("{}z", number).parse::<Tile>(),
+                Ok(Tile {
+                    number: number - 4,
+                    tile_type: TileType::Dragon,
+                })
+            );
+        }
+    }
+
+    #[test]
+    fn formats_suhai_codes() {
+        assert_eq!(
+            Tile {
+                number: 1,
+                tile_type: TileType::Manzu,
+            }
+            .to_string(),
+            "1m"
+        );
+        assert_eq!(
+            Tile {
+                number: 9,
+                tile_type: TileType::Pinzu,
+            }
+            .to_string(),
+            "9p"
+        );
+        assert_eq!(
+            Tile {
+                number: 1,
+                tile_type: TileType::Souzu,
+            }
+            .to_string(),
+            "1s"
+        );
+    }
+
+    #[test]
+    fn formats_honor_codes() {
+        for number in 1..=4 {
+            assert_eq!(
+                Tile {
+                    number,
+                    tile_type: TileType::Wind,
+                }
+                .to_string(),
+                format!("{}z", number)
+            );
+        }
+
+        for number in 1..=3 {
+            assert_eq!(
+                Tile {
+                    number,
+                    tile_type: TileType::Dragon,
+                }
+                .to_string(),
+                format!("{}z", number + 4)
+            );
+        }
+    }
+
+    #[test]
+    fn rejects_invalid_codes() {
+        assert_eq!("".parse::<Tile>(), Err(ParseTileError::InvalidFormat));
+        assert_eq!("11m".parse::<Tile>(), Err(ParseTileError::InvalidFormat));
+        assert_eq!("xm".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
+        assert_eq!("0m".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
+        assert_eq!("0p".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
+        assert_eq!("0s".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
+        assert_eq!("0z".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
+        assert_eq!("8z".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
+        assert_eq!("1x".parse::<Tile>(), Err(ParseTileError::InvalidTileType));
+    }
+
+    #[test]
+    fn display_uses_short_code() {
+        assert_eq!(
+            Tile {
+                number: 1,
+                tile_type: TileType::Souzu,
+            }
+            .to_string(),
+            "1s"
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "invalid number tile number")]
+    fn display_rejects_invalid_suhai() {
+        Tile {
+            number: 10,
+            tile_type: TileType::Manzu,
+        }
+        .to_string();
     }
 }
