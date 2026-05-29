@@ -72,6 +72,46 @@ impl Tile {
             _ => self,
         }
     }
+
+    pub fn dora_from_indicator(self) -> Tile {
+        let tile = self.normalize_red();
+
+        match tile.tile_type {
+            TileType::Manzu | TileType::Pinzu | TileType::Souzu => match tile.number {
+                1..=8 => Tile {
+                    number: tile.number + 1,
+                    tile_type: tile.tile_type,
+                },
+                9 => Tile {
+                    number: 1,
+                    tile_type: tile.tile_type,
+                },
+                _ => panic!("invalid number tile number: {}", tile.number),
+            },
+            TileType::Wind => match tile.number {
+                1..=3 => Tile {
+                    number: tile.number + 1,
+                    tile_type: tile.tile_type,
+                },
+                4 => Tile {
+                    number: 1,
+                    tile_type: tile.tile_type,
+                },
+                _ => panic!("invalid wind tile number: {}", tile.number),
+            },
+            TileType::Dragon => match tile.number {
+                1..=2 => Tile {
+                    number: tile.number + 1,
+                    tile_type: tile.tile_type,
+                },
+                3 => Tile {
+                    number: 1,
+                    tile_type: tile.tile_type,
+                },
+                _ => panic!("invalid dragon tile number: {}", tile.number),
+            },
+        }
+    }
 }
 
 impl FromStr for Tile {
@@ -246,6 +286,99 @@ mod tests {
         };
 
         assert_eq!(tile.normalize_red(), tile);
+    }
+
+    #[test]
+    fn converts_suhai_dora_indicators() {
+        assert_eq!(
+            Tile {
+                number: 1,
+                tile_type: TileType::Manzu,
+            }
+            .dora_from_indicator(),
+            Tile {
+                number: 2,
+                tile_type: TileType::Manzu,
+            }
+        );
+        assert_eq!(
+            Tile {
+                number: 9,
+                tile_type: TileType::Pinzu,
+            }
+            .dora_from_indicator(),
+            Tile {
+                number: 1,
+                tile_type: TileType::Pinzu,
+            }
+        );
+    }
+
+    #[test]
+    fn converts_red_dora_indicator_as_normal_five() {
+        assert_eq!(
+            Tile {
+                number: 10,
+                tile_type: TileType::Souzu,
+            }
+            .dora_from_indicator(),
+            Tile {
+                number: 6,
+                tile_type: TileType::Souzu,
+            }
+        );
+    }
+
+    #[test]
+    fn converts_wind_dora_indicators() {
+        assert_eq!(
+            Tile {
+                number: 1,
+                tile_type: TileType::Wind,
+            }
+            .dora_from_indicator(),
+            Tile {
+                number: 2,
+                tile_type: TileType::Wind,
+            }
+        );
+        assert_eq!(
+            Tile {
+                number: 4,
+                tile_type: TileType::Wind,
+            }
+            .dora_from_indicator(),
+            Tile {
+                number: 1,
+                tile_type: TileType::Wind,
+            }
+        );
+    }
+
+    #[test]
+    fn converts_dragon_dora_indicators() {
+        assert_eq!(
+            Tile {
+                number: 1,
+                tile_type: TileType::Dragon,
+            }
+            .dora_from_indicator(),
+            Tile {
+                number: 2,
+                tile_type: TileType::Dragon,
+            }
+        );
+        assert_eq!(
+            Tile {
+                number: 3,
+                tile_type: TileType::Dragon,
+            }
+            .dora_from_indicator(),
+            Tile {
+                number: 1,
+                tile_type: TileType::Dragon,
+            }
+        );
     }
 
     #[test]
