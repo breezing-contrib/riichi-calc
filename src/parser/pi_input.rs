@@ -106,12 +106,10 @@ impl PiInput {
         let mut red_count = 0;
 
         for &pi in self.hand.iter() {
-            let pi = if pi.number == 10 {
+            let normal_pi = pi.normalize_red();
+            let pi = if normal_pi != pi {
                 red_count += 1;
-                Tile {
-                    number: 5,
-                    tile_type: pi.tile_type.clone(),
-                }
+                normal_pi
             } else {
                 pi
             };

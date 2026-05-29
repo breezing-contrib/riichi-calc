@@ -62,6 +62,18 @@ pub enum ParseTileError {
     InvalidTileType,
 }
 
+impl Tile {
+    pub fn normalize_red(self) -> Tile {
+        match self.tile_type {
+            TileType::Manzu | TileType::Pinzu | TileType::Souzu if self.number == 10 => Tile {
+                number: 5,
+                tile_type: self.tile_type,
+            },
+            _ => self,
+        }
+    }
+}
+
 impl FromStr for Tile {
     type Err = ParseTileError;
 
@@ -77,23 +89,20 @@ impl FromStr for Tile {
             .ok_or(ParseTileError::InvalidNumber)? as u8;
         let suffix = chars.next().ok_or(ParseTileError::InvalidFormat)?;
 
-        if number == 0 {
-            return Err(ParseTileError::InvalidNumber);
-        }
-
         match suffix {
             'm' if number <= 9 => Ok(Tile {
-                number,
+                number: parse_suhai_number(number),
                 tile_type: TileType::Manzu,
             }),
             'p' if number <= 9 => Ok(Tile {
-                number,
+                number: parse_suhai_number(number),
                 tile_type: TileType::Pinzu,
             }),
             's' if number <= 9 => Ok(Tile {
-                number,
+                number: parse_suhai_number(number),
                 tile_type: TileType::Souzu,
             }),
+            'z' if number == 0 => Err(ParseTileError::InvalidNumber),
             'z' if number <= 4 => Ok(Tile {
                 number,
                 tile_type: TileType::Wind,
@@ -128,8 +137,17 @@ impl fmt::Display for Tile {
 
 fn format_suhai_code(f: &mut fmt::Formatter, number: u8, suffix: char) -> fmt::Result {
     match number {
+        10 => write!(f, "0{}", suffix),
         1..=9 => write!(f, "{}{}", number, suffix),
         _ => panic!("invalid number tile number: {}", number),
+    }
+}
+
+fn parse_suhai_number(number: u8) -> u8 {
+    if number == 0 {
+        10
+    } else {
+        number
     }
 }
 
@@ -160,6 +178,74 @@ mod tests {
                 tile_type: TileType::Souzu,
             })
         );
+        assert_eq!(
+            "0m".parse::<Tile>(),
+            Ok(Tile {
+                number: 10,
+                tile_type: TileType::Manzu,
+            })
+        );
+        assert_eq!(
+            "0p".parse::<Tile>(),
+            Ok(Tile {
+                number: 10,
+                tile_type: TileType::Pinzu,
+            })
+        );
+        assert_eq!(
+            "0s".parse::<Tile>(),
+            Ok(Tile {
+                number: 10,
+                tile_type: TileType::Souzu,
+            })
+        );
+    }
+
+    #[test]
+    fn converts_red_suhai_to_normal_five() {
+        assert_eq!(
+            Tile {
+                number: 10,
+                tile_type: TileType::Manzu,
+            }
+            .normalize_red(),
+            Tile {
+                number: 5,
+                tile_type: TileType::Manzu,
+            }
+        );
+        assert_eq!(
+            Tile {
+                number: 10,
+                tile_type: TileType::Pinzu,
+            }
+            .normalize_red(),
+            Tile {
+                number: 5,
+                tile_type: TileType::Pinzu,
+            }
+        );
+        assert_eq!(
+            Tile {
+                number: 10,
+                tile_type: TileType::Souzu,
+            }
+            .normalize_red(),
+            Tile {
+                number: 5,
+                tile_type: TileType::Souzu,
+            }
+        );
+    }
+
+    #[test]
+    fn leaves_normal_tiles_unchanged_when_normalizing_red() {
+        let tile = Tile {
+            number: 5,
+            tile_type: TileType::Manzu,
+        };
+
+        assert_eq!(tile.normalize_red(), tile);
     }
 
     #[test]
@@ -211,6 +297,30 @@ mod tests {
             .to_string(),
             "1s"
         );
+        assert_eq!(
+            Tile {
+                number: 10,
+                tile_type: TileType::Manzu,
+            }
+            .to_string(),
+            "0m"
+        );
+        assert_eq!(
+            Tile {
+                number: 10,
+                tile_type: TileType::Pinzu,
+            }
+            .to_string(),
+            "0p"
+        );
+        assert_eq!(
+            Tile {
+                number: 10,
+                tile_type: TileType::Souzu,
+            }
+            .to_string(),
+            "0s"
+        );
     }
 
     #[test]
@@ -243,9 +353,6 @@ mod tests {
         assert_eq!("".parse::<Tile>(), Err(ParseTileError::InvalidFormat));
         assert_eq!("11m".parse::<Tile>(), Err(ParseTileError::InvalidFormat));
         assert_eq!("xm".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
-        assert_eq!("0m".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
-        assert_eq!("0p".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
-        assert_eq!("0s".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
         assert_eq!("0z".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
         assert_eq!("8z".parse::<Tile>(), Err(ParseTileError::InvalidNumber));
         assert_eq!("1x".parse::<Tile>(), Err(ParseTileError::InvalidTileType));
@@ -267,7 +374,7 @@ mod tests {
     #[should_panic(expected = "invalid number tile number")]
     fn display_rejects_invalid_suhai() {
         Tile {
-            number: 10,
+            number: 11,
             tile_type: TileType::Manzu,
         }
         .to_string();
