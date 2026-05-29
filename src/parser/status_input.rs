@@ -1,6 +1,6 @@
 use crate::constants::status::RiichiStatus::{DoubleRiichi, NoRiichi, Riichi};
 use crate::constants::status::SpecialWin::{Chankan, DaiichiTumo, Haitei, Hotei, Ipatu, Rinshan};
-use crate::constants::status::WinMethod::{Ron, Tumo};
+use crate::constants::status::WinMethod::{Ron, Tsumo};
 use crate::constants::status::{SpecialWin, Status, WinMethod};
 use crate::parser::ValidationError::{InvalidWinCombination, OutOfRange};
 use crate::parser::{InputBase, ValidationError};
@@ -47,24 +47,24 @@ impl InputBase for Status {
             ));
         }
         if win.contains(&Chankan) && self.win_method != Ron {
-            return Err(InvalidWinCombination(Chankan.to_string(), Tumo.to_string()));
+            return Err(InvalidWinCombination(Chankan.to_string(), Tsumo.to_string()));
         }
-        if win.contains(&Rinshan) && self.win_method != Tumo {
+        if win.contains(&Rinshan) && self.win_method != Tsumo {
             return Err(InvalidWinCombination(Rinshan.to_string(), Ron.to_string()));
         }
 
         if win.contains(&Haitei) && win.contains(&Hotei) {
             return Err(InvalidWinCombination(Haitei.to_string(), Hotei.to_string()));
         }
-        if win.contains(&Haitei) && self.win_method != Tumo {
+        if win.contains(&Haitei) && self.win_method != Tsumo {
             return Err(InvalidWinCombination(Haitei.to_string(), Ron.to_string()));
         }
         if win.contains(&Hotei) && self.win_method != Ron {
-            return Err(InvalidWinCombination(Hotei.to_string(), Tumo.to_string()));
+            return Err(InvalidWinCombination(Hotei.to_string(), Tsumo.to_string()));
         }
 
         if win.contains(&DaiichiTumo)
-            && (win.len() != 1 || self.riichi != NoRiichi || self.win_method != Tumo)
+            && (win.len() != 1 || self.riichi != NoRiichi || self.win_method != Tsumo)
         {
             return Err(InvalidWinCombination(
                 DaiichiTumo.to_string(),
@@ -93,7 +93,7 @@ impl Display for WinMethod {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Ron => write!(f, "ロン"),
-            Tumo => write!(f, "ツモ"),
+            Tsumo => write!(f, "ツモ"),
         }
     }
 }
@@ -255,7 +255,7 @@ mod ipatu_related {
 #[cfg(test)]
 mod kan_related {
     use crate::constants::status::SpecialWin::{Chankan, Rinshan};
-    use crate::constants::status::WinMethod::{Ron, Tumo};
+    use crate::constants::status::WinMethod::{Ron, Tsumo};
     use crate::parser::status_input::status_input_utils::build_status_input;
     use crate::parser::InputBase;
     use crate::parser::ValidationError::InvalidWinCombination;
@@ -280,10 +280,10 @@ mod kan_related {
 
     #[test]
     fn chakan_tumo_invalid() {
-        let input = build_status_input(false, Tumo, vec![Chankan]);
+        let input = build_status_input(false, Tsumo, vec![Chankan]);
         assert_eq!(
             input.validate(),
-            Err(InvalidWinCombination(Chankan.to_string(), Tumo.to_string()))
+            Err(InvalidWinCombination(Chankan.to_string(), Tsumo.to_string()))
         );
     }
 
@@ -301,7 +301,7 @@ mod kan_related {
         use super::*;
         use crate::parser::status_input::status_input_utils::build_status_input;
 
-        let input = build_status_input(false, Tumo, vec![Rinshan]);
+        let input = build_status_input(false, Tsumo, vec![Rinshan]);
         assert_eq!(input.validate(), Ok(()));
     }
 }
@@ -309,7 +309,7 @@ mod kan_related {
 #[cfg(test)]
 mod kawa_related {
     use crate::constants::status::SpecialWin::{Haitei, Hotei};
-    use crate::constants::status::WinMethod::{Ron, Tumo};
+    use crate::constants::status::WinMethod::{Ron, Tsumo};
     use crate::parser::status_input::status_input_utils::build_status_input;
     use crate::parser::InputBase;
     use crate::parser::ValidationError::InvalidWinCombination;
@@ -334,7 +334,7 @@ mod kawa_related {
 
     #[test]
     fn haitei_tumo_valid() {
-        let input = build_status_input(false, Tumo, vec![Haitei]);
+        let input = build_status_input(false, Tsumo, vec![Haitei]);
         assert_eq!(input.validate(), Ok(()));
     }
 
@@ -346,10 +346,10 @@ mod kawa_related {
 
     #[test]
     fn hotei_tumo_invalid() {
-        let input = build_status_input(false, Tumo, vec![Hotei]);
+        let input = build_status_input(false, Tsumo, vec![Hotei]);
         assert_eq!(
             input.validate(),
-            Err(InvalidWinCombination(Hotei.to_string(), Tumo.to_string()))
+            Err(InvalidWinCombination(Hotei.to_string(), Tsumo.to_string()))
         );
     }
 }
@@ -357,20 +357,20 @@ mod kawa_related {
 #[cfg(test)]
 mod tenchiho_related {
     use crate::constants::status::SpecialWin::DaiichiTumo;
-    use crate::constants::status::WinMethod::{Ron, Tumo};
+    use crate::constants::status::WinMethod::{Ron, Tsumo};
     use crate::parser::status_input::status_input_utils::build_status_input;
     use crate::parser::InputBase;
     use crate::parser::ValidationError::InvalidWinCombination;
 
     #[test]
     fn daiichi_tumo_valid() {
-        let input = build_status_input(false, Tumo, vec![DaiichiTumo]);
+        let input = build_status_input(false, Tsumo, vec![DaiichiTumo]);
         assert_eq!(input.validate(), Ok(()));
     }
 
     #[test]
     fn daiichi_tumo_riichi_invalid() {
-        let input = build_status_input(true, Tumo, vec![DaiichiTumo]);
+        let input = build_status_input(true, Tsumo, vec![DaiichiTumo]);
         assert_eq!(
             input.validate(),
             Err(InvalidWinCombination(

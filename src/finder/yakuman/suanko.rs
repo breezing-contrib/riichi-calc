@@ -31,7 +31,7 @@ impl YakuBase for Suanko {
         };
         if hand.winning_tile == janto {
             Some(YakuEntry::new(YakuKind::SuankoTanki, 2))
-        } else if status.win_method == WinMethod::Tumo {
+        } else if status.win_method == WinMethod::Tsumo {
             Some(YakuEntry::new(YakuKind::Suanko, 1))
         } else {
             None
@@ -81,7 +81,7 @@ mod valid {
             red_tile: 0,
         };
         let mut status = random_status();
-        status.win_method = WinMethod::Tumo;
+        status.win_method = WinMethod::Tsumo;
 
         assert_eq!(
             Suanko::validate(&random_field(), &winning_hand, &status),

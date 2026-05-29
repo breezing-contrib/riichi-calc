@@ -22,11 +22,11 @@ impl YakuBase for Sananko {
             }
         }
 
-        if anko_count == 4 && status.win_method == WinMethod::Tumo {
+        if anko_count == 4 && status.win_method == WinMethod::Tsumo {
             return None;
         }
 
-        if status.win_method == WinMethod::Tumo || Self::is_ron_sananko(hand) {
+        if status.win_method == WinMethod::Tsumo || Self::is_ron_sananko(hand) {
             return Some(YakuEntry::new(YakuKind::Sananko, 2));
         }
 
@@ -124,7 +124,7 @@ mod valid {
             red_tile: 0,
         };
         let mut status = random_status();
-        status.win_method = WinMethod::Tumo;
+        status.win_method = WinMethod::Tsumo;
 
         assert_eq!(
             Sananko::validate(&random_field(), &winning_hand, &status),
@@ -262,7 +262,7 @@ mod invalid {
             red_tile: 0,
         };
         let mut status = random_status();
-        status.win_method = WinMethod::Tumo;
+        status.win_method = WinMethod::Tsumo;
 
         assert_eq!(
             Sananko::validate(&random_field(), &winning_hand, &status),

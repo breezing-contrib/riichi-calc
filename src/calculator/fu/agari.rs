@@ -15,7 +15,7 @@ impl FuBase for Agari {
                     0
                 }
             }
-            WinMethod::Tumo => 2,
+            WinMethod::Tsumo => 2,
         }
     }
 }

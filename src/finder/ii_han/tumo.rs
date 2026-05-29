@@ -39,7 +39,7 @@ mod valid {
         ];
         let winning_hand = from_hand(hand);
         let mut status = random_status();
-        status.win_method = WinMethod::Tumo;
+        status.win_method = WinMethod::Tsumo;
         assert_eq!(
             Tumo::validate(&field, &winning_hand, &status),
             Some(YakuEntry::new(YakuKind::MenzenTsumo, 1)),

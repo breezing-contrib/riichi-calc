@@ -76,7 +76,7 @@ fn main() {
             number: 2,
             tile_type: TileType::Manzu,
         }]),
-        win_method: WinMethod::Tumo,
+        win_method: WinMethod::Tsumo,
         special_win: Default::default(),
     };
 

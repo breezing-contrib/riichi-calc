@@ -48,7 +48,7 @@ pub enum WinMethod {
     /// ロン
     Ron,
     /// ツモ
-    Tumo,
+    Tsumo,
 }
 
 ///

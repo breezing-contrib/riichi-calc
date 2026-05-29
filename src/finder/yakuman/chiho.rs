@@ -9,7 +9,7 @@ pub struct Chiho;
 impl YakuBase for Chiho {
     fn validate(field: &Field, _: &WinningHand, status: &Status) -> Option<YakuEntry> {
         if status.special_win.contains(&SpecialWin::DaiichiTumo)
-            && status.win_method.eq(&WinMethod::Tumo)
+            && status.win_method.eq(&WinMethod::Tsumo)
             && field.zikaze.ne(&Wind::East)
         {
             return Some(YakuEntry::new(YakuKind::Chiho, 1));
@@ -44,7 +44,7 @@ mod valid {
         let winning_hand = from_hand(hand);
         let mut status = random_status();
         status.special_win = vec![SpecialWin::DaiichiTumo].into_iter().collect();
-        status.win_method = WinMethod::Tumo;
+        status.win_method = WinMethod::Tsumo;
         assert_eq!(
             Chiho::validate(&field, &winning_hand, &status),
             Some(YakuEntry::new(YakuKind::Chiho, 1)),
@@ -76,7 +76,7 @@ mod invalid {
         let winning_hand = from_hand(hand);
         let mut status = random_status();
         status.special_win = vec![].into_iter().collect();
-        status.win_method = WinMethod::Tumo;
+        status.win_method = WinMethod::Tsumo;
         assert_eq!(
             Chiho::validate(&field, &winning_hand, &status),
             None,

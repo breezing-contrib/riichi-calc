@@ -5,7 +5,7 @@ use crate::finder::result::FoundResult;
 pub fn calc(fu: u8, han: u8, yaku: &FoundResult, win_method: &WinMethod) -> Points {
     match yaku {
         FoundResult::FoundYaku(_) => match win_method {
-            WinMethod::Tumo => tumo_calc(fu, han),
+            WinMethod::Tsumo => tumo_calc(fu, han),
             WinMethod::Ron => ron_calc(fu, han),
         },
         FoundResult::FoundYakuman(_) => yakuman_calc(han, win_method.clone()),
@@ -19,7 +19,7 @@ fn yakuman_calc(han: u8, win_method: WinMethod) -> Points {
     let han: u32 = u32::from(han);
     let score_sum: u32 = YAKUMAN_SCORE_BASE * han;
     match win_method {
-        WinMethod::Tumo => Points::ChildTumo(score_sum / 4, score_sum / 2),
+        WinMethod::Tsumo => Points::ChildTumo(score_sum / 4, score_sum / 2),
         WinMethod::Ron => Points::Ron(score_sum),
     }
 }

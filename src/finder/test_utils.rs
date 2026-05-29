@@ -190,7 +190,7 @@ pub fn random_status() -> Status {
         _ => unreachable!(),
     };
     let win_method = if random::<bool>() {
-        WinMethod::Tumo
+        WinMethod::Tsumo
     } else {
         WinMethod::Ron
     };
