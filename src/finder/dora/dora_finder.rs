@@ -1,7 +1,7 @@
 use crate::constants::hand::{Hand, Mentsu};
 use crate::constants::tiles::Tile;
 
-pub fn find_dora(dora: &Vec<Tile>, hand: &Hand) -> u8 {
+pub fn count_dora(dora: &[Tile], hand: &Hand) -> u8 {
     let mut dora_count = 0;
     for mentsu in hand {
         match mentsu {

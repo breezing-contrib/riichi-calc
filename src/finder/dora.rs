@@ -9,6 +9,8 @@ mod dora_finder;
 mod omote;
 mod ura;
 
+pub use dora_finder::count_dora;
+
 pub fn dora_count(field: &Field, winning_hand: &WinningHand, status: &Status) -> Vec<YakuEntry> {
     let validators: Vec<YakuValidator> = vec![
         aka::Aka::validate,

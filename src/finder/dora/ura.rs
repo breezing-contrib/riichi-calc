@@ -1,7 +1,7 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::{RiichiStatus, Status};
-use crate::finder::dora::dora_finder::find_dora;
+use crate::finder::dora::count_dora;
 use crate::finder::finder_base::YakuBase;
 use crate::finder::yaku::{YakuEntry, YakuKind};
 
@@ -12,7 +12,7 @@ impl YakuBase for Ura {
         match &status.riichi {
             RiichiStatus::NoRiichi => None,
             RiichiStatus::Riichi(dora) | RiichiStatus::DoubleRiichi(dora) => {
-                let dora_count = find_dora(&dora, &hand.hand);
+                let dora_count = count_dora(dora, &hand.hand);
                 Some(YakuEntry::new(YakuKind::UraDora, dora_count))
             }
         }

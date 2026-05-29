@@ -1,7 +1,7 @@
 use crate::constants::field::Field;
 use crate::constants::hand::WinningHand;
 use crate::constants::status::Status;
-use crate::finder::dora::dora_finder::find_dora;
+use crate::finder::dora::count_dora;
 use crate::finder::finder_base::YakuBase;
 use crate::finder::yaku::{YakuEntry, YakuKind};
 
@@ -9,7 +9,7 @@ pub struct Omote;
 
 impl YakuBase for Omote {
     fn validate(field: &Field, hand: &WinningHand, _: &Status) -> Option<YakuEntry> {
-        let dora_count = find_dora(&field.dora, &hand.hand);
+        let dora_count = count_dora(&field.dora, &hand.hand);
 
         if dora_count > 0 {
             Some(YakuEntry::new(YakuKind::Dora, dora_count))
